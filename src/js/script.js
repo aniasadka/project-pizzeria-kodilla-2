@@ -290,6 +290,7 @@
       thisCart.products = []; //  przechowuje produkty dodane do koszyka
 
       thisCart.getElements(element);
+      thisCart.initActions(element);
 
 
       console.log('new Cart', thisCart);
