@@ -283,6 +283,38 @@
 
   }
 
+  class Cart {
+    constructor(element) {
+      const thisCart = this;
+
+      thisCart.products = []; //  przechowuje produkty dodane do koszyka
+
+      thisCart.getElements(element);
+
+
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element) {
+      const thisCart = this;
+
+      thisCart.dom = {}; // przechowujemy tutaj wszystkie elementy DOM, wyszukane w komponencie koszyka. Ułatwi nam to ich nazewnictwo, ponieważ zamiast np. thisCart.amountElem będziemy mieli thisCart.dom.amount
+
+      thisCart.dom.wrapper = element;
+
+      thisCart.dom.toggleTrigger = element.queryselector(select.cart.toggleTrigger);
+
+    }
+
+    initCart: function () { // initCart będzie inicjować instancję koszyka
+        const thisApp = this;
+
+        const cartElem = document.querySelector(select.containerOff.cart);
+        thisApp.cart = new Cart(cartElem);
+      },
+
+  }
+
   const app = {
     initMenu: function () {
       const thisApp = this;
