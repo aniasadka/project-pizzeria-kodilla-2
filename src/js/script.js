@@ -314,6 +314,15 @@
         thisApp.cart = new Cart(cartElem);
       },
 
+
+      initActions(element);
+    const thisCart = this;
+
+    thisCart.dom.toggleTrigger.addEventListener('click', function () {
+
+    })
+
+
   }
 
   const app = {
