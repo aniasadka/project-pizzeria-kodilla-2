@@ -283,6 +283,7 @@
 
   }
 
+  /* pokazywanie i ukrywanie koszyka; dodawanie/usuwanie produktów; podliczanie ceny zamówienia */
   class Cart {
     constructor(element) {
       const thisCart = this;
@@ -302,17 +303,18 @@
       thisCart.dom = {}; // przechowujemy tutaj wszystkie elementy DOM, wyszukane w komponencie koszyka. Ułatwi nam to ich nazewnictwo, ponieważ zamiast np. thisCart.amountElem będziemy mieli thisCart.dom.amount
 
       thisCart.dom.wrapper = element;
-
       thisCart.dom.toggleTrigger = element.queryselector(select.cart.toggleTrigger);
+      thisCart.dom.productList = [];
 
     }
 
-    initActions(element);
-    const thisCart = this;
+    initActions() {
+      const thisCart = this;
 
-    thisCart.dom.toggleTrigger.addEventListener('click', function () {
-
-    })
+      thisCart.dom.toggleTrigger.addEventListener('click', function () {
+        element.classList.toggle(classNames.cart.wrapperActive);
+      });
+    }
 
 
   }
@@ -330,7 +332,8 @@
       const thisApp = this;
 
       thisApp.data = dataSource;
-    }
+    },
+
 
     initCart: function () { // initCart będzie inicjować instancję koszyka
       const thisApp = this;
