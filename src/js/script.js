@@ -63,11 +63,10 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
-      thisProduct.processOrder();
       thisProduct.initAmountWidget();
+      thisProduct.processOrder();
 
-
-      console.log('new Product:', thisProduct);
+      //console.log('new Product:', thisProduct);
     }
 
 
