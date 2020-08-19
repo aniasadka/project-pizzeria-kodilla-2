@@ -139,6 +139,16 @@
       }
     }
 
+    initAmountWidget() {
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+
+      thisProduct.amountWidgetElem.addEventListener('updated', function () {
+        thisProduct.processOrder();
+      });
+    }
+
     processOrder() {
       const thisProduct = this;
       //console.log('processOrder');
@@ -188,7 +198,13 @@
 
       /*multiply price by amount */
 
-      price *= thisProduct.amountWidgetElem.value;
+      thisProduct.priceSingle = price;
+      thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidgetElem.value;
+
+      /* set the contents of thisProduct.priceElem to be the value of variable price */
+      //thisProduct.priceElem.innerHTML = thisProduct.price;
+
+      //price *= thisProduct.amountWidgetElem.value;
 
       //thisProduct.priceSingle = price; // właściwość produktu z ceną 1 sztuki
       //thisProduct.price = thisProduct.priceSingle * thisProduct.AmountWidget.value;
@@ -202,15 +218,7 @@
 
     }
 
-    initAmountWidget() {
-      const thisProduct = this;
 
-      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-
-      thisProduct.amountWidgetElem.addEventListener('updated', function () {
-        thisProduct.processOrder();
-      });
-    }
   }
 
   class AmountWidget {
