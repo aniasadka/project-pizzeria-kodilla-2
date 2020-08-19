@@ -7,7 +7,7 @@
     templateOf: {
       menuProduct: '#template-menu-product',
     },
-    containerOf: {
+    containerOff: {
       menu: '#product-list',
       cart: '#cart',
     },
@@ -31,6 +31,7 @@
         linkIncrease: 'a[href="#more"]',
       },
     },
+
   };
 
   const classNames = {
@@ -303,12 +304,11 @@
       thisCart.dom = {}; // przechowujemy tutaj wszystkie elementy DOM, wyszukane w komponencie koszyka. Ułatwi nam to ich nazewnictwo, ponieważ zamiast np. thisCart.amountElem będziemy mieli thisCart.dom.amount
 
       thisCart.dom.wrapper = element;
-      thisCart.dom.toggleTrigger = element.queryselector(select.cart.toggleTrigger);
-      thisCart.dom.productList = [];
+      thisCart.dom.toggleTrigger.classList.toggle(classNames.cart.wrapperActive);
 
     }
 
-    initActions() {
+    initActions(element) {
       const thisCart = this;
 
       thisCart.dom.toggleTrigger.addEventListener('click', function () {
@@ -351,8 +351,10 @@
       //console.log('settings:', settings);
       //console.log('templates:', templates);
 
-      thisApp.initData();
+
       thisApp.initMenu();
+      thisApp.initData();
+      thisApp.initCart();
     },
 
   };
