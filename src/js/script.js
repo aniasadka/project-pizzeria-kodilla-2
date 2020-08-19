@@ -188,15 +188,17 @@
 
       /*multiply price by amount */
 
-      thisProduct.priceSingle = price; // właściwość produktu z ceną 1 sztuki
-      thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
+      price *= thisProduct.amountWidgetElem.value;
+
+      //thisProduct.priceSingle = price; // właściwość produktu z ceną 1 sztuki
+      //thisProduct.price = thisProduct.priceSingle * thisProduct.AmountWidget.value;
 
 
       /* set the contents of thisProduct.priceElem to be the value of variable price */
 
       thisProduct.priceElem.innerHTML = thisProduct.price;
 
-      console.log(thisProduct.params);
+      //console.log(thisProduct.params);
 
     }
 
