@@ -337,7 +337,7 @@
       thisCart.dom = {}; // przechowujemy tutaj wszystkie elementy DOM, wyszukane w komponencie koszyka. Ułatwi nam to ich nazewnictwo, ponieważ zamiast np. thisCart.amountElem będziemy mieli thisCart.dom.amount
 
       thisCart.dom.wrapper = element;
-      thisCart.dom.toggleTrigger = element.queryselector(select.cart.toggleTrigger);
+      thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
       //thisCart.dom.toggleTrigger.classList.toggle(classNames.cart.wrapperActive);
 
     }
