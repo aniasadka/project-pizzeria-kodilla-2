@@ -349,6 +349,8 @@
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
       //thisCart.dom.toggleTrigger.classList.toggle(classNames.cart.wrapperActive);
+
+      // 9.3 - 4.Pamiętamy o zdefiniowaniu thisCart.dom.productList w metodzie getElements.
       thisCart.dom.productList = element.querySelector(select.cart.productList);
 
     }
@@ -364,9 +366,13 @@
     add(menuProduct) {
       const thisCart = this;
 
+      // Najpierw za pomocą odpowiedniego szablonu tworzymy kod HTML i zapisujemy go w stałej generatedHTML
       const generatedHTML = templates.cartProduct(menuProduct);
 
+      //Następnie ten kod zamieniamy na elementy DOM i zapisujemy w następnej stałej – generatedDOM.
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+
+      //Dodajemy te elementy DOM do thisCart.dom.productList.
       thisCart.dom.productList.appendChild(generatedDOM);
 
       console.log('adding product', menuProduct);
