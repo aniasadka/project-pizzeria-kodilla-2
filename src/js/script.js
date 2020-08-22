@@ -321,7 +321,10 @@
     announce() {
       const thisWidget = this;
 
-      const event = new Event('updated');
+      const event = new CustomEvent('updated', {
+        bubbles: true
+      });
+
       thisWidget.element.dispatchEvent(event);
     }
 
@@ -334,11 +337,13 @@
 
       thisCart.products = []; //  przechowuje produkty dodane do koszyka
 
+      thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
+
       thisCart.getElements(element);
       thisCart.initActions(element);
 
 
-      console.log('new Cart', thisCart);
+      //console.log('new Cart', thisCart);
     }
 
     getElements(element) {
@@ -353,6 +358,13 @@
       // 9.3 - 4.Pamiętamy o zdefiniowaniu thisCart.dom.productList w metodzie getElements.
       thisCart.dom.productList = element.querySelector(select.cart.productList);
 
+      //W metodzie getElements dodaj ten kod:
+      thisCart.renderTotalsKeys = ['totalNumber', 'totalPrice', 'subtotalPrice', 'deliveryFee'];
+
+      for (let key of thisCart.renderTotalsKeys) {
+        thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(select.cart[key]);
+      }
+
     }
 
     initActions(element) {
@@ -360,6 +372,10 @@
 
       thisCart.dom.toggleTrigger.addEventListener('click', function () {
         element.classList.toggle(classNames.cart.wrapperActive);
+      });
+      // Dzięki temu możemy teraz w metodzie Cart.initActions dodać taki kod:
+      thisCart.productList.addEventListener('updated', function () {
+        thisCart.update();
       });
     }
 
@@ -375,10 +391,106 @@
       //Dodajemy te elementy DOM do thisCart.dom.productList.
       thisCart.dom.productList.appendChild(generatedDOM);
 
-      console.log('adding product', menuProduct);
+      //console.log('adding product', menuProduct);
+
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      //console.log('thisCart.products', thisCart.products);
+
+      //  dodaj jeszcze wywołanie metody update na końcu metody add
+      thisCart.update();
+    }
+
+    update() {
+      const thisCart = this;
+      thisCart.totalNumber = 0;
+      thisCart.subtotalPrice = 0;
+
+      // Następnie użyj pętli for...of, iterującej po thisCart.products. Dla każdego z nich zwiększ thisCart.subtotalPrice o cenę (price) tego produktu, a thisCart.totalNumber – o jego liczbę (amount).
+      for (let product of thisCart.products) {
+        thisCart.subtotalPrice += product.price;
+        thisCart.totalNumber += product.amount;
+      }
+      // Po zamknięciu pętli zapisz kolejną właściwość koszyka – thisCart.totalPrice – i przypisz jej wartość równą sumie właściwości subtotalPrice oraz deliveryFee.
+      thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
+
+      //Teraz wróć do naszej metody update i na jej końcu dodaj:
+      for (let key of thisCart.renderTotalsKeys) {
+        for (let elem of thisCart.dom[key]) {
+          elem.innerHTML = thisCart[key];
+        }
+      }
+
     }
 
 
+  }
+
+  class CartProduct {
+    constructor(menuProduct, element) {
+      thisCartProduct = this;
+
+      /* zapisz właściwości thisCartProduct czerpiąc wartości z menuProduct 
+      dla tych właściwości: id, name, price, priceSingle, amount, */
+
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.priceSingle = menuproduct.priceSingle;
+      thisCartProduct.amount = menuProduct.amount;
+
+
+      /*zapisz właściwość thisCartProduct.params nadając jej wartość JSON.parse
+      (JSON.stringify(menuProduct.params)) (wyjaśnienie znajdziesz w poradniku JS), */
+
+      thisCartProduct.params = JSON.parse(JSON.stringify(menuProduct.params));
+
+      /* wykonaj metodę getElements przekazując jej argument element, mentor: co oznacza wykonanie metody getElements????? */
+      thisCartProduct.getElements(element);
+      // Nie zapomnij wykonać metody initAmountWidget w konstruktorze klasy CartProduct!
+      thisCartProduct.initAmountWidget();
+
+      //console.log('new CartProduct', thisCartProduct);
+      //console.log('productData', menuProduct);
+    }
+
+    getElements(element) {
+      // zdefiniuj stałą thisCartProduct i zapisz w niej obiekt this,
+      const thisCartProduct = this;
+
+      // stwórz pusty obiekt thisCartProduct.dom,
+      thisCartProduct.dom = {};
+
+      // stwórz właściwość thisCartProduct.dom.wrapper i przypisz jej wartość argumentu element,
+      thisCartProduct.dom.wrapper = element;
+
+      // stwórz kolejnych kilka właściwości obiektu thisCartProduct.dom 
+      //i przypisz im elementy znalezione we wrapperze; te właściwości 
+      // to: amountWidget, price, edit, remove (ich selektory znajdziesz w select.cartProduct)
+
+      thisCartProduct.dom.amountWidget = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.remove);
+    }
+
+    initAmountWidget() {
+      const thisCartProduct = this;
+
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
+
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function () {
+        // Wartością thisCartProduct.amount będzie właściwość value obiektu thisCartProduct.amountWidget,
+        // ponieważ nasz AmountWidget sam aktualizuje tę właściwość
+        thisCartProduct.amount = thisCartProduct.amountWidget.value;
+
+        //Natomiast do właściwości thisCartProduct.price przypiszemy wartość mnożenia dwóch właściwości tej instancji 
+        //(thisCartProduct) – priceSingle oraz amount (której przed chwilą nadaliśmy nową wartość).
+        thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+
+        //thisCartProduct.processOrder();
+      });
+    }
   }
 
   const app = {
