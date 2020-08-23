@@ -377,6 +377,10 @@
       thisCart.productList.addEventListener('updated', function () {
         thisCart.update();
       });
+
+      thisCart.productList.addEventListener('remove', function () {
+        thisCart.remove(event.detail.cartProduct);
+      });
     }
 
     add(menuProduct) {
@@ -422,6 +426,23 @@
 
     }
 
+    remove(cartProduct) {
+      const thisCart = this;
+
+      //zadeklarować stałą index, której wartością będzie indeks cartProduct w tablicy thisCart.products,
+      const index = thisCart.products.indexOf(cartProduct);
+
+      // użyć metody splice do usunięcia elementu o tym indeksie z tablicy thisCart.products,
+      thisCart.products.splice(index);
+
+      // usunąć z DOM element cartProduct.dom.wrapper,
+      cartProduct.dom.wrapper.remove();
+
+      //wywołać metodę update w celu przeliczenia sum po usunięciu produktu.
+      thisCart.update();
+
+    }
+
 
   }
 
@@ -437,6 +458,7 @@
       thisCartProduct.price = menuProduct.price;
       thisCartProduct.priceSingle = menuProduct.priceSingle;
       thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.initActions();
 
 
       /*zapisz właściwość thisCartProduct.params nadając jej wartość JSON.parse
@@ -489,6 +511,33 @@
         thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
 
         //thisCartProduct.processOrder();
+      });
+    }
+
+    remove() {
+      const thisCartProduct = this;
+
+      const event = new CustomEvent('remove', {
+        bubbles: true;
+        detail: {
+          cartProduct: thisCartProduct,
+        },
+      });
+
+      thisCartProduct.dom.wrapper.dispatchEvent(event);
+    }
+
+    initActions() {
+      const thisCartProduct = this;
+
+      // W tej metodzie stwórz dwa listenery eventów 'click': jeden dla guzika thisCartProduct.dom.edit, a drugi dla thisCartProduct.dom.remove. Oba mają blokować domyślną akcję dla tego eventu. Guzik edycji na razie nie będzie niczego robił, ale w handlerze guzika usuwania możemy dodać wywołanie metody remove.
+      thisCartProduct.dom.edit.addEventListener('click', function (event) {
+        event.preventDefault();
+      });
+
+      thisCartProduct.dom.remove.addEventListener('click', function (event) {
+        event.preventDefault();
+        thisCartProduct.remove();
       });
     }
   }
