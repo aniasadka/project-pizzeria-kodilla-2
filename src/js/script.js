@@ -427,7 +427,7 @@
 
   class CartProduct {
     constructor(menuProduct, element) {
-      thisCartProduct = this;
+      const thisCartProduct = this;
 
       /* zapisz właściwości thisCartProduct czerpiąc wartości z menuProduct 
       dla tych właściwości: id, name, price, priceSingle, amount, */
@@ -435,7 +435,7 @@
       thisCartProduct.id = menuProduct.id;
       thisCartProduct.name = menuProduct.name;
       thisCartProduct.price = menuProduct.price;
-      thisCartProduct.priceSingle = menuproduct.priceSingle;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
       thisCartProduct.amount = menuProduct.amount;
 
 
