@@ -374,11 +374,11 @@
         element.classList.toggle(classNames.cart.wrapperActive);
       });
       // Dzięki temu możemy teraz w metodzie Cart.initActions dodać taki kod:
-      thisCart.productList.addEventListener('updated', function () {
+      thisCart.dom.productList.addEventListener('updated', function () {
         thisCart.update();
       });
 
-      thisCart.productList.addEventListener('remove', function () {
+      thisCart.dom.productList.addEventListener('remove', function () {
         thisCart.remove(event.detail.cartProduct);
       });
     }
@@ -518,7 +518,7 @@
       const thisCartProduct = this;
 
       const event = new CustomEvent('remove', {
-        bubbles: true;
+        bubbles: true,
         detail: {
           cartProduct: thisCartProduct,
         },
