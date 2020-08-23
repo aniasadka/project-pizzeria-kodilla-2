@@ -458,8 +458,6 @@
       thisCartProduct.price = menuProduct.price;
       thisCartProduct.priceSingle = menuProduct.priceSingle;
       thisCartProduct.amount = menuProduct.amount;
-      thisCartProduct.initActions();
-
 
       /*zapisz właściwość thisCartProduct.params nadając jej wartość JSON.parse
       (JSON.stringify(menuProduct.params)) (wyjaśnienie znajdziesz w poradniku JS), */
@@ -468,6 +466,9 @@
 
       /* wykonaj metodę getElements przekazując jej argument element, mentor: co oznacza wykonanie metody getElements????? */
       thisCartProduct.getElements(element);
+
+      thisCartProduct.initActions();
+
       // Nie zapomnij wykonać metody initAmountWidget w konstruktorze klasy CartProduct!
       thisCartProduct.initAmountWidget();
 
