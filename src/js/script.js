@@ -369,6 +369,15 @@
       for (let key of thisCart.renderTotalsKeys) {
         thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(select.cart[key]);
       }
+      // W metodzie Cart.getElements dodaj właściwość thisCart.dom.form i przypisz jej element znaleziony we wrapperze koszyka za pomocą selektora zapisanego w select.cart.form
+      thisCart.dom.form = element.querySelector(select.cart.form);
+      console.log(thisCart.dom.form);
+      // Zacznij od dodania do metody Cart.getElements właściwości dla inputów na numer telefonu i adres.
+      thisCart.dom.phone = element.querySelector(select.cart.phone);
+      console.log(thisCart.dom.phone);
+
+      thisCart.dom.address = element.querySelector(select.cart.address);
+      console.log(thisCart.dom.address);
 
     }
 
@@ -386,6 +395,49 @@
       thisCart.dom.productList.addEventListener('remove', function () {
         thisCart.remove(event.detail.cartProduct);
       });
+      //Następnie w metodzie Cart.initActions dodaj event listener dla tego formularza. Nasłuchujemy eventu 'submit' i dodajemy event.preventDefault(), aby wysłanie formularza nie przeładowało strony.
+      thisCart.dom.form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        thisCart.sendOrder();
+      });
+    }
+
+    sendOrder() {
+      const thisCart = this;
+      const url = settings.db.url + '/' + settings.db.order;
+
+      //Następnie w obiekcie payload zapisz ich wartości. Dodaj też wartości zliczane w update, czyli totalNumber, subtotalPrice i totalPrice. Aby dane były kompletne, dodaj też deliveryFee, mimo że jest niezmienne.
+      // Obiekt payload musi też zawierać tablicę products, która na razie będzie pusta. 
+      const payload = {
+        phone: thisCart.dom.phone.value,
+        address: thisCart.dom.address.value,
+        totalNumber: thisCart.totalNumber,
+        subtotalPrice: thisCart.subtotalPrice,
+        totalPrice: thisCart.totalPrice,
+        deliveryFee: thisCart.deliveryFee,
+        products: [],
+      };
+
+      //Pod obiektem payload dodaj pętlę iterującą po wszystkich thisCart.products, i dla każdego produktu wywołaj jego metodę getData, którą za chwilę napiszesz. Wynik zwracany przez tą metodą dodaj do tablicy payload.products.
+      for (let product of thisCart.products) {
+        payload.products.push(product.getData());
+      }
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+
+      };
+
+      fetch(url, options)
+        .then(function (response) {
+          return response.json();
+        }).then(function (parsedResponse) {
+          console.log('parsedResponse', parsedResponse);
+        });
     }
 
     add(menuProduct) {
@@ -545,6 +597,21 @@
         event.preventDefault();
         thisCartProduct.remove();
       });
+    }
+    // Pozostaje nam jeszcze napisanie metody CartProduct.getData, która będzie zwracać wszystkie informacje o zamawianym produkcie – id, amount, price, priceSingle oraz params. Wszystkie te wartości są ustawiane w konstruktorze, więc nie powinno być problemu ze zwróceniem ich ("zapakowanych" w obiekt) z metody getData.
+    getData() {
+      const thisCartProduct = this;
+
+      const orderedProductData = {
+        id: thisCartProduct.id,
+        amount: thisCartProduct.amount,
+        price: thisCartProduct.price,
+        priceSingle: thisCartProduct.priceSingle,
+        params: thisCartProduct.params
+      };
+
+      return orderedProductData;
+
     }
   }
 
